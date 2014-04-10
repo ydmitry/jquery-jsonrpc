@@ -84,9 +84,7 @@
         this._validateRequestCallbacks(options.success, options.error);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, options.id)), options);
-
-        return true;
+        return this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, options.id)), options);
       },
 
       /*
@@ -123,7 +121,7 @@
         this._validateRequestCallbacks(options.success, options.error);
 
         var data = [],
-            request;
+          request;
 
         // Prepare our request object
         for(var i = 0; i<requests.length; i++) {
@@ -158,9 +156,9 @@
       // Validate request params.  Must be a) empty, b) an object (e.g. {}), or c) an array
       _validateRequestParams: function(params) {
         if(!(params === null ||
-             params === undefined ||
-             typeof(params) === 'object' ||
-             $.isArray(params))) {
+          params === undefined ||
+          typeof(params) === 'object' ||
+          $.isArray(params))) {
           throw("Invalid params supplied for jsonRPC request. It must be empty, an object or an array.");
         }
         return true;
@@ -169,16 +167,16 @@
       _validateRequestCallbacks: function(success, error) {
         // Make sure callbacks are either empty or a function
         if(success !== undefined &&
-           typeof(success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
+          typeof(success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
         if(error !== undefined &&
-         typeof(error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
+          typeof(error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
         return true;
       },
 
       // Internal method used for generic ajax requests
       _doRequest: function(data, options) {
         var _that = this;
-        $.ajax({
+        return $.ajax({
           type: 'POST',
           async: false !== options.async,
           dataType: 'json',
@@ -187,6 +185,7 @@
           data: data,
           cache: options.cache,
           processData: false,
+          timeout: 300000,
           error: function(json) {
             _that._requestError.call(_that, json, options.error);
           },
@@ -200,12 +199,12 @@
       _requestUrl: function(url, cache) {
         url = url || this.endPoint;
         if (!cache) {
-            if (url.indexOf("?") < 0) {
-              url += '?tm=' + new Date().getTime();
-            }
-            else {
-              url += "&tm=" + new Date().getTime();
-            }
+          if (url.indexOf("?") < 0) {
+            url += '?tm=' + new Date().getTime();
+          }
+          else {
+            url += "&tm=" + new Date().getTime();
+          }
         }
         return url;
       },
@@ -273,7 +272,7 @@
             }
 
             if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
-                (!$.isArray(json) && json.jsonrpc !== '2.0')) {
+              (!$.isArray(json) && json.jsonrpc !== '2.0')) {
               throw 'Version error';
             }
 
