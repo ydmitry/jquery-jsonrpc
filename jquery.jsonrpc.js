@@ -185,7 +185,6 @@
           data: data,
           cache: options.cache,
           processData: false,
-          timeout: 300000,
           error: function(json) {
             _that._requestError.call(_that, json, options.error);
           },
